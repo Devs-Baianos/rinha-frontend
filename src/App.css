@@ -39,3 +39,9 @@ form label:hover {
 .submit-button:hover {
   background: #ccc;
 }
+
+.file-error {
+  margin: 0;
+  margin-top: -5px;
+  color: #d41e1e;
+}
