@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
+import fs from 'fs'
 
 function App() {
   const fileInputRef = useRef()
@@ -17,6 +18,7 @@ function App() {
     const fileName = fileInputRef.current.files[0]?.name.toLowerCase()
     if (!fileName.endsWith('.json'))
       return setDisplayError('Invalid file. Please load a valid JSON file.')
+    const test = fs.readFile(fileInputRef.current.files[0])
     return setDisplayError(null)
   }
 
@@ -34,7 +36,7 @@ function App() {
 
         <form className="file-form" onSubmit={onSubmit}>
           <label htmlFor="input-file">Load Json</label>
-          <input type="file" name="file" id="input-file" ref={fileInputRef} onChange={() => setSelectedFile(fileInputRef.current?.files[0].name)}/>
+          <input type="file" name="file" id="input-file" ref={fileInputRef} onChange={() => setSelectedFile(fileInputRef.current?.files[0].name)} />
 
           <button type="submit" className="submit-button">
             Confirm
