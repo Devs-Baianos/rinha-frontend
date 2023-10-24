@@ -5,20 +5,20 @@ function App() {
 
 
   const fileInputRef = useRef()
-  const [displayError, setDisplayError] = useState()
+  const [displayError, setDisplayError] = useState(null)
 
   useEffect(() => {
-    setDisplayError(false)
+    setDisplayError(null)
   }, [])
 
   const onSubmit = (ev) => {
     ev.preventDefault()
-    const fileName = fileInputRef.current.files[0].name.toLowerCase()
-    if (fileName.endsWith('.json')) {
-      setDisplayError(false)
-    }
-    else
-      setDisplayError(true)
+    if (!fileInputRef.current.files.length)
+      return setDisplayError('Choose a file to be read!')
+    const fileName = fileInputRef.current.files[0]?.name.toLowerCase()
+    if (!fileName.endsWith('.json'))
+      return setDisplayError('Invalid file. Please load a valid JSON file.')
+    return setDisplayError(null)
   }
   return (
     <div className="App">
@@ -34,10 +34,7 @@ function App() {
             Confirm
           </button>
 
-          {
-            displayError ? <p className="file-error">Invalid file. Please load a valid JSON file.</p>
-              : ''
-          }
+          <p className="file-error">{displayError}</p>
 
         </form>
       </div>
