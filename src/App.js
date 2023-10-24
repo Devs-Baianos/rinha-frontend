@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 function App() {
-
-
   const fileInputRef = useRef()
+  const [selectedFile, setSelectedFile] = useState()
   const [displayError, setDisplayError] = useState(null)
 
   useEffect(() => {
@@ -20,15 +19,22 @@ function App() {
       return setDisplayError('Invalid file. Please load a valid JSON file.')
     return setDisplayError(null)
   }
+
+  useEffect(() => {
+    console.log(selectedFile)
+  }, [selectedFile])
+
   return (
     <div className="App">
       <div className="Intro">
         <h1> Json Tree Viewer </h1>
         <p>Simple JSON Viewer that runs completely on-client. No data exchange</p>
 
+        {selectedFile && <p>{selectedFile}</p>}
+
         <form className="file-form" onSubmit={onSubmit}>
           <label htmlFor="input-file">Load Json</label>
-          <input type="file" name="file" id="input-file" ref={fileInputRef} />
+          <input type="file" name="file" id="input-file" ref={fileInputRef} onChange={() => setSelectedFile(fileInputRef.current?.files[0].name)}/>
 
           <button type="submit" className="submit-button">
             Confirm
