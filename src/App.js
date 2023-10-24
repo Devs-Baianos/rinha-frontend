@@ -27,7 +27,7 @@ function App() {
         <p>Simple JSON Viewer that runs completely on-client. No data exchange</p>
 
         <form className="file-form" onSubmit={onSubmit}>
-          <label for="input-file">Load Json</label>
+          <label htmlFor="input-file">Load Json</label>
           <input type="file" name="file" id="input-file" ref={fileInputRef} />
 
           <button type="submit" className="submit-button">
