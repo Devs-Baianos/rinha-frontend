@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
-import fs from 'fs'
 
 function App() {
   const fileInputRef = useRef()
@@ -11,6 +10,10 @@ function App() {
     setDisplayError(null)
   }, [])
 
+  useEffect(() => {
+    console.log(selectedFile)
+  }, [selectedFile])
+
   const onSubmit = (ev) => {
     ev.preventDefault()
     if (!fileInputRef.current.files.length)
@@ -18,13 +21,14 @@ function App() {
     const fileName = fileInputRef.current.files[0]?.name.toLowerCase()
     if (!fileName.endsWith('.json'))
       return setDisplayError('Invalid file. Please load a valid JSON file.')
-    const test = fs.readFile(fileInputRef.current.files[0])
+    const reader = new FileReader()
+    reader.addEventListener('load', (event) => {
+      console.log(event.target.result)
+    })
+    reader.readAsText(fileInputRef.current.files[0])
+
     return setDisplayError(null)
   }
-
-  useEffect(() => {
-    console.log(selectedFile)
-  }, [selectedFile])
 
   return (
     <div className="App">
