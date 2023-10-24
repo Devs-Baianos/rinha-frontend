@@ -3,6 +3,7 @@ import './App.css'
 
 function App() {
   const fileInputRef = useRef()
+  const jsonRef = useRef()
   const [selectedFile, setSelectedFile] = useState()
   const [displayError, setDisplayError] = useState(null)
 
@@ -14,6 +15,42 @@ function App() {
     console.log(selectedFile)
   }, [selectedFile])
 
+  const getFinalContent = formattedContent => {
+    if (formattedContent.length < 50 || typeof (formattedContent) == 'number') {
+      return `<span>${formattedContent}</span>`;
+    }
+    return `<span class="clickable" style="cursor: pointer">+</span><pre style="display:none">${formattedContent}</pre>`;
+  }
+
+  const jsonToHTML = json => {
+    const display = 'block'
+    const htmlArray = [`<ul style="display:${display}">`]
+
+    for (let [key, value] of Object.entries(json)) {
+      if (typeof (value) === 'object' && Object.keys(value).length > 0) {
+        htmlArray.push(`<li>${key}:<span class="clickable" style="cursor: pointer">+</span>`)
+        htmlArray.push(jsonToHTML(value))
+
+      } else {
+        let content
+
+        if (Array.isArray(value)) {
+          content = '[]'
+        } else if (typeof (value) === 'object') {
+          content = '{}'
+
+        } else {
+          const formattedContent = value
+          content = getFinalContent(formattedContent)
+        }
+
+        htmlArray.push(`<li>${key}: ${content}</li>`)
+      }
+    }
+    htmlArray.push('</ul>')
+    return htmlArray.flat().join('')
+  }
+
   const onSubmit = (ev) => {
     ev.preventDefault()
     if (!fileInputRef.current.files.length)
@@ -23,7 +60,11 @@ function App() {
       return setDisplayError('Invalid file. Please load a valid JSON file.')
     const reader = new FileReader()
     reader.addEventListener('load', (event) => {
-      console.log(event.target.result)
+      const jsonContent = JSON.parse(event.target.result)
+
+      console.log(jsonToHTML(jsonContent))
+
+      jsonRef.current.innerHTML = jsonToHTML(jsonContent) 
     })
     reader.readAsText(fileInputRef.current.files[0])
 
@@ -47,6 +88,8 @@ function App() {
           </button>
 
           <p className="file-error">{displayError}</p>
+        
+          <p ref={jsonRef}>testets<br/>testetste</p>
 
         </form>
       </div>

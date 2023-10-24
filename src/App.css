@@ -45,3 +45,7 @@ form label:hover {
   margin-top: -5px;
   color: #d41e1e;
 }
+
+#selected-file {
+  font-weight: bold;
+}
